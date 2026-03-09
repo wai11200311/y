@@ -1,15 +1,24 @@
 AFRAME.registerComponent('warnai-sabuk', {
-    schema: { default: '#FFFFFF' },
+    schema: { type: 'string', default: '#FFFFFF' },
     init: function () {
-        this.el.addEventListener('model-loaded', this.update.bind(this));
+        this.el.addEventListener('model-loaded', () => {
+            this.update();
+        });
     },
     update: function () {
         var mesh = this.el.getObject3D('mesh');
         var warna = this.data;
+        
         if (!mesh) return;
+
         mesh.traverse(function (node) {
-            if (node.isMesh) {
+            if (node.isMesh && node.material) {
+                // Matikan tekstur bawaan agar warna kita bisa masuk
+                node.material.map = null; 
+                // Set warna baru dari JSON
                 node.material.color.set(warna);
+                // Wajib! Beritahu sistem untuk me-refresh material
+                node.material.needsUpdate = true;
             }
         });
     }
@@ -50,7 +59,6 @@ document.addEventListener('DOMContentLoaded', () => {
             sequenceState = 1;
             if(karakter) karakter.emit('sembunyi'); 
             setTimeout(() => { 
-                // Gembok karakter biar benar-benar hilang
                 if(karakter) karakter.setAttribute('visible', 'false');
                 if(temple1) {
                     temple1.setAttribute('visible', 'true');
@@ -92,13 +100,11 @@ document.addEventListener('DOMContentLoaded', () => {
             if(backsound) backsound.play();
         }
         
-        // PENGAMAN SAAT MARKER MUNCUL SETELAH AUDIO TAMAT
         if (isAudioFinished) {
             panel.classList.remove('tersembunyi');
             visualSabuk.setAttribute('visible', 'true');
             visualSabuk.setAttribute('scale', '1 1 1');
             
-            // Eksekusi mati karakter dan temple
             if(karakter) {
                 karakter.setAttribute('scale', '0 0 0'); 
                 karakter.setAttribute('visible', 'false');
@@ -128,11 +134,9 @@ document.addEventListener('DOMContentLoaded', () => {
         if (markerVisible) {
             if(efekPartikel) efekPartikel.setAttribute('visible', 'false');
             
-            // Beri perintah mengecil
             if(karakter) karakter.emit('sembunyi');
             if(temple1) temple1.emit('sembunyi');
             
-            // Tunggu mengecil selesai, lalu hilangkan paksa dari layar
             setTimeout(() => {
                 if(karakter) {
                     karakter.setAttribute('scale', '0 0 0');
