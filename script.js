@@ -35,14 +35,12 @@ document.addEventListener('DOMContentLoaded', () => {
     let isAudioFinished = false;
     let sabukInterval;
     
-    // Status giliran: 0 = Orang, 1 = Temple1
     let sequenceState = 0; 
 
     if(backsound) backsound.volume = 0.15; 
 
     fetch('materi.json').then(r => r.json()).then(d => { data = d; });
 
-    // Transisi dibagi 2 (Tengah-tengah audio)
     audio.addEventListener('timeupdate', () => {
         if (!markerVisible || isNaN(audio.duration) || audio.duration === 0) return;
         
@@ -52,7 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
             sequenceState = 1;
             if(karakter) karakter.emit('sembunyi'); 
             setTimeout(() => { 
-                if(temple1) temple1.emit('muncul'); 
+                // Gembok karakter biar benar-benar hilang
+                if(karakter) karakter.setAttribute('visible', 'false');
+                if(temple1) {
+                    temple1.setAttribute('visible', 'true');
+                    temple1.emit('muncul'); 
+                }
             }, 1000); 
         }
     });
@@ -89,12 +92,21 @@ document.addEventListener('DOMContentLoaded', () => {
             if(backsound) backsound.play();
         }
         
+        // PENGAMAN SAAT MARKER MUNCUL SETELAH AUDIO TAMAT
         if (isAudioFinished) {
             panel.classList.remove('tersembunyi');
             visualSabuk.setAttribute('visible', 'true');
             visualSabuk.setAttribute('scale', '1 1 1');
-            if(karakter) karakter.setAttribute('scale', '0 0 0'); 
-            if(temple1) temple1.setAttribute('scale', '0 0 0');
+            
+            // Eksekusi mati karakter dan temple
+            if(karakter) {
+                karakter.setAttribute('scale', '0 0 0'); 
+                karakter.setAttribute('visible', 'false');
+            }
+            if(temple1) {
+                temple1.setAttribute('scale', '0 0 0');
+                temple1.setAttribute('visible', 'false');
+            }
             if(efekPartikel) efekPartikel.setAttribute('visible', 'false');
         }
     });
@@ -116,10 +128,20 @@ document.addEventListener('DOMContentLoaded', () => {
         if (markerVisible) {
             if(efekPartikel) efekPartikel.setAttribute('visible', 'false');
             
-            if(sequenceState === 0 && karakter) karakter.emit('sembunyi');
-            if(sequenceState === 1 && temple1) temple1.emit('sembunyi');
+            // Beri perintah mengecil
+            if(karakter) karakter.emit('sembunyi');
+            if(temple1) temple1.emit('sembunyi');
             
+            // Tunggu mengecil selesai, lalu hilangkan paksa dari layar
             setTimeout(() => {
+                if(karakter) {
+                    karakter.setAttribute('scale', '0 0 0');
+                    karakter.setAttribute('visible', 'false');
+                }
+                if(temple1) {
+                    temple1.setAttribute('scale', '0 0 0');
+                    temple1.setAttribute('visible', 'false');
+                }
                 mulaiSiklusSabuk();
             }, 1000);
         }
