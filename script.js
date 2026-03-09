@@ -13,11 +13,8 @@ AFRAME.registerComponent('warnai-sabuk', {
 
         mesh.traverse(function (node) {
             if (node.isMesh && node.material) {
-                // Matikan tekstur bawaan agar warna kita bisa masuk
                 node.material.map = null; 
-                // Set warna baru dari JSON
                 node.material.color.set(warna);
-                // Wajib! Beritahu sistem untuk me-refresh material
                 node.material.needsUpdate = true;
             }
         });
@@ -72,7 +69,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!audio || isNaN(audio.duration)) return;
         let durasiAudio = audio.duration * 1000; 
         
-        let animasiBaru = `property: rotation; from: 0 0 0; to: 0 360 0; loop: true; dur: ${durasiAudio}; easing: linear`;
+        // --- DI UBAH JADI -90 AGAR BERDIRI TEGAK SAAT MARKER VERTIKAL ---
+        let animasiBaru = `property: rotation; from: -90 0 0; to: -90 360 0; loop: true; dur: ${durasiAudio}; easing: linear`;
         
         if(karakter) karakter.setAttribute('animation', animasiBaru);
         if(temple1) temple1.setAttribute('animation', animasiBaru);
@@ -172,3 +170,4 @@ document.addEventListener('DOMContentLoaded', () => {
         visualSabuk.setAttribute('warnai-sabuk', s.warna);
     }
 });
+
