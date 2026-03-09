@@ -1,0 +1,32 @@
+[
+    {
+        "sabuk": "Sabuk Putih",
+        "arti": "Melambangkan kesucian, awal, atau dasar dari semua warna.",
+        "warna": "#FFFFFF"
+    },
+    {
+        "sabuk": "Sabuk Kuning",
+        "arti": "Melambangkan bumi, tempat di mana tanaman menancapkan akarnya.",
+        "warna": "#FFFF00"
+    },
+    {
+        "sabuk": "Sabuk Hijau",
+        "arti": "Melambangkan pepohonan yang mulai tumbuh dan berkembang.",
+        "warna": "#008000"
+    },
+    {
+        "sabuk": "Sabuk Biru",
+        "arti": "Melambangkan birunya langit yang menaungi bumi.",
+        "warna": "#0000FF"
+    },
+    {
+        "sabuk": "Sabuk Merah",
+        "arti": "Melambangkan bahaya, memperingatkan siswa untuk melatih kontrol diri.",
+        "warna": "#FF0000"
+    },
+    {
+        "sabuk": "Sabuk Hitam",
+        "arti": "Melambangkan kedewasaan, penguasaan diri, dan akhir dari ketakutan.",
+        "warna": "#000000"
+    }
+]
